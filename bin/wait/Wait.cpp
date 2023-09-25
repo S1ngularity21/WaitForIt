@@ -16,6 +16,7 @@ Wait::Wait(int argc, char **argv)
 
 Wait::~Wait()
 {
+	//test
 }
 
 Wait::Result Wait::exec()
