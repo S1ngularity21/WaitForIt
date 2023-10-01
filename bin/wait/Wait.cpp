@@ -43,15 +43,26 @@ Wait::Result Wait::exec()
     
     }
 
+    bool finish = false;
     // Wait for the specified process ID to finish.
-    printf("Waiting for process %d to finish...\n", pid);
-    // Wait for the specified process ID to finish.
-    if (waitpid(pid, &status, 0) == -1) {
-        printf("Finished waiting for process %d, but an error occurred: %s\n", pid, strerror(errno));
-        ERROR("Status Error: " << strerror(errno));
-        return IOError;
+    while (!finish) {
+
+        printf("Waiting for process %d to finish...\n", pid); // Wait for the specified process ID to finish.
+        #define WNOHANG 1 // Explicitly define WNOHANG
+        pid_t ret = waitpid(pid, &status, WNOHANG); // Use WNOHANG to make waitpid return immediately
+        printf("waitpid returned: %d, errno: %d\n", ret, errno); // Print the return value and errno
+
+        if (ret == -1) {
+            printf("Error occurred while waiting for process %d: %s\n", pid, strerror(errno));
+            ERROR("Status Error: " << strerror(errno));
+            return IOError;
+        } else if (ret == pid) {
+            finish = true;
+            printf("Finished waiting for process %d.\n", pid);
+        }
+
     }
-    printf("Finished waiting for process %d.\n", pid);
+   
 
     return Success;	
 }
