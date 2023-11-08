@@ -106,7 +106,11 @@ class Process
      * Get Wait ID.
      */
     ProcessID getWait() const;
-
+    
+    /**
+     * Get priority
+     */
+    uint getPriority() const;
     /**
      * Get wait result
      */
@@ -257,6 +261,9 @@ class Process
 
     /** Wait exit result of the other Process. */
     uint m_waitResult;
+
+    /** Priority level */
+    uint m_priority;
 
     /** Privilege level */
     bool m_privileged;
