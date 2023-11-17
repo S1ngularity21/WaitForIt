@@ -26,18 +26,25 @@ Scheduler::Scheduler()
 
 Size Scheduler::count() const
 {
-    return m_queue.count();
+    int count = 0;
+    for (int i = 0; i < 5; ++i)
+    {
+        count += m_multilvl_queue[i].count();
+    }
+    return count;
 }
 
 Scheduler::Result Scheduler::enqueue(Process *proc, bool ignoreState)
 {
     if (proc->getState() != Process::Ready && !ignoreState)
     {
-        ERROR("process ID " << proc->getID() << " not in Ready state");
+        ERROR("Process ID " << proc->getID() << " not in Ready state");
         return InvalidArgument;
     }
 
-    m_queue.push(proc);
+    int priority = proc->getPriority();
+    m_multilvl_queue[priority - 1].push(proc);
+
     return Success;
 }
 
@@ -45,35 +52,39 @@ Scheduler::Result Scheduler::dequeue(Process *proc, bool ignoreState)
 {
     if (proc->getState() == Process::Ready && !ignoreState)
     {
-        ERROR("process ID " << proc->getID() << " is in Ready state");
+        ERROR("Process ID " << proc->getID() << " is in Ready state");
         return InvalidArgument;
     }
 
-    Size count = m_queue.count();
+    int priority = proc->getPriority();
+    Size count = m_multilvl_queue[priority - 1].count();
 
     // Traverse the Queue to remove the Process
     for (Size i = 0; i < count; i++)
     {
-        Process *p = m_queue.pop();
+        Process *p = m_multilvl_queue[priority - 1].pop();
 
         if (p == proc)
             return Success;
         else
-            m_queue.push(p);
+            m_multilvl_queue[priority - 1].push(p);
     }
 
-    FATAL("process ID " << proc->getID() << " is not in the schedule");
+    FATAL("Process ID " << proc->getID() << " is not in the schedule");
     return InvalidArgument;
 }
 
 Process * Scheduler::select()
 {
-    if (m_queue.count() > 0)
+    for (int i = 0; i < 5; ++i)
     {
-        Process *p = m_queue.pop();
-        m_queue.push(p);
-
-        return p;
+       if (m_multilvl_queue[i].isEmpty())
+       {
+         continue;
+       }
+       Process *p = m_multilvl_queue[i].pop();
+       m_multilvl_queue[i].push(p);
+       return p;
     }
 
     return (Process *) NULL;
