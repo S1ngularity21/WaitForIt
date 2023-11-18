@@ -2,4 +2,6 @@ Amogh Prakash
 Pablo Vivanco
 Nicholas Nguyen
 
-video link: https://youtu.be/61Lx-LfLWfA
+Prioritize It - Code changes on priority branch 
+video link:
+https://youtu.be/fxiUQbhiGGI
