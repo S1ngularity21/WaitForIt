@@ -155,6 +155,7 @@ class Process
 
   protected:
 
+    Result setPriority(int priority);
     /**
      * Initialize the Process.
      *

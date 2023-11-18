@@ -78,6 +78,19 @@ uint Process::getPriority() const
 	return m_priority;
 }
 
+Process::Result Process::setPriority(int priority)
+{
+    if (priority >= 1 && priority <= 5)
+    {
+        m_priority = priority;
+        return Success;
+    }
+    else
+    {
+        return InvalidArgument;
+    }
+}
+
 uint Process::getWaitResult() const
 {
     return m_waitResult;

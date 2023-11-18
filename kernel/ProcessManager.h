@@ -64,6 +64,8 @@ class ProcessManager
      */
     ProcessManager();
 
+    Result setPriority(const ProcessID id, const int priority);
+    
     /**
      * Destructor function.
      */

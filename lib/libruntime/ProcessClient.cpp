@@ -89,6 +89,12 @@ ProcessClient::Result ProcessClient::processInfo(const String program,
     return NotFound;
 }
 
+//add another function setPriority
+void ProcessClient::setPriority(const ProcessID pid, int priority)
+{
+    ProcessCtl(pid, SetPriority, priority);
+}
+
 ProcessID ProcessClient::findProcess(const String program) const
 {
     ProcessClient::Info info;
